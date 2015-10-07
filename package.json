@@ -7,7 +7,7 @@
     "crisper": "bin/crisper"
   },
   "scripts": {
-    "test": "node_modules/.bin/jshint --verbose bin/crisper index.js test/test.js && node_modules/.bin/mocha"
+    "test": "jshint --verbose bin/crisper index.js test/test.js && mocha"
   },
   "repository": {
     "type": "git",
