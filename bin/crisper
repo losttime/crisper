@@ -12,6 +12,7 @@
 // jshint node: true
 'use strict';
 
+var mkdirp = require('mkdirp');
 var nopt = require('nopt');
 var fs = require('fs');
 var path = require('path');
@@ -55,6 +56,17 @@ var onlySplit = args['only-split'];
 
 var docText = '';
 
+function writeFile(filename, data, options) {
+  mkdirp(path.dirname(filename), function(err) {
+    if (err) {
+      console.log('Could not create missing directory tree!', err);
+      process.exit(1);
+    } else {
+      fs.writeFileSync(filename, data, options);
+    }
+  });
+}
+
 function processSource() {
   var split = crisp({
     source: docText,
@@ -62,9 +74,9 @@ function processSource() {
     scriptInHead: placeInHead,
     onlySplit: onlySplit
   });
-  fs.writeFileSync(outhtml, split.html, 'utf-8');
+  writeFile(outhtml, split.html, 'utf-8');
   if (split.js) {
-    fs.writeFileSync(outscript, split.js, 'utf-8');
+    writeFile(outscript, split.js, 'utf-8');
   }
 }
 
