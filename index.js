@@ -33,8 +33,9 @@ var noSemiColonInsertion = /\/\/|;\s*$|\*\/\s*$/;
 module.exports = function crisp(options) {
   var source = options.source || '';
   var jsFileName = options.jsFileName || '';
-  var scriptInHead = options.scriptInHead || false;
+  var scriptInHead = options.scriptInHead !== false;
   var onlySplit = options.onlySplit || false;
+  var alwaysWriteScript = options.alwaysWriteScript || false;
 
   var doc = dom5.parse(source);
   var body = dom5.query(doc, pred.hasTagName('body'));
@@ -60,7 +61,7 @@ module.exports = function crisp(options) {
   });
 
   if (!onlySplit) {
-    if (contents.length > 0) {
+    if (contents.length > 0 || alwaysWriteScript) {
       var newScript = dom5.constructors.element('script');
       dom5.setAttribute(newScript, 'src', jsFileName);
       if (scriptInHead) {
@@ -81,12 +82,4 @@ module.exports = function crisp(options) {
     html: html,
     js: js
   };
-};
-
-// deprecated
-module.exports.split = function split(source, jsFileName) {
-  return module.exports({
-    source: source,
-    jsFileName: jsFileName
-  });
 };
